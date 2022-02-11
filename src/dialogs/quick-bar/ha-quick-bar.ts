@@ -226,7 +226,7 @@ export class QuickBar extends LitElement {
                     height: this._narrow
                       ? "calc(100vh - 56px)"
                       : `${Math.min(
-                          items.length * 72 + 26,
+                          items.length * 54 + 26,
                           this._done ? 500 : 0
                         )}px`,
                   })}
@@ -275,10 +275,13 @@ export class QuickBar extends LitElement {
   private _renderEntityItem(item: EntityItem, index?: number) {
     return html`
       <mwc-list-item
-        .twoline=${Boolean(item.altText)}
+        .twoline=${Boolean(this.hass.userData?.showAdvanced && item.altText)}
         .item=${item}
         index=${ifDefined(index)}
         graphic="icon"
+        class=${this.hass.userData?.showAdvanced && item.altText
+          ? "single-line"
+          : ""}
       >
         ${item.iconPath
           ? html`
@@ -296,7 +299,7 @@ export class QuickBar extends LitElement {
               ></ha-icon>
             `}
         <span>${item.primaryText}</span>
-        ${item.altText
+        ${item.altText && this.hass.userData?.showAdvanced
           ? html`
               <span slot="secondary" class="item-text secondary"
                 >${item.altText}</span
@@ -768,6 +771,10 @@ export class QuickBar extends LitElement {
 
         mwc-list-item.command-item {
           text-transform: capitalize;
+        }
+
+        mwc-list-item.single-line {
+          min-height: 48px;
         }
 
         .hint {
